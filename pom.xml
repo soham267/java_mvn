@@ -5,33 +5,40 @@
   
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Define project coordinates -->
+    <!-- Project coordinates -->
     <groupId>com.example</groupId>
     <artifactId>qaenv</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
-
+    <packaging>war</packaging> <!-- WAR packaging to create a WAR file -->
     <name>qaenv</name>
-    <description>Sample QA Environment Web Application</description>
+    <description>QA Environment Web Application</description>
     <url>http://maven.apache.org</url>
 
-    <!-- Java version -->
+    <!-- Java version properties -->
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
-    <!-- Dependencies -->
+    <!-- Dependencies section -->
     <dependencies>
-        <!-- Servlet API for Tomcat 10.x -->
+        <!-- Servlet API for Tomcat -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>5.0.0</version>
+            <version>5.0.0</version> <!-- Tomcat 10 uses Jakarta EE -->
             <scope>provided</scope>
         </dependency>
 
-        <!-- JUnit for testing -->
+        <!-- JSP API for JSP pages -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
+            <version>2.0.0</version> <!-- JSP API -->
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JUnit for unit testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -40,7 +47,7 @@
         </dependency>
     </dependencies>
 
-    <!-- Build configuration -->
+    <!-- Build section -->
     <build>
         <plugins>
             <!-- Maven WAR Plugin to build the WAR file -->
@@ -49,60 +56,24 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.1</version>
                 <configuration>
-                    <!-- WAR file context path -->
+                    <!-- Custom WAR file name -->
                     <warName>qaenv</warName>
+                    <!-- Optionally specify the location of web.xml -->
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                 </configuration>
             </plugin>
 
-            <!-- Maven Tomcat Plugin for deployment -->
+            <!-- Maven Compiler Plugin to compile source code -->
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat10-maven-plugin</artifactId>
-                <version>4.0.0</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
-                    <!-- Set the Tomcat server URL -->
-                    <url>http://localhost:8080/manager/text</url>
-                    <server>TomcatServer</server> <!-- Refer to settings.xml in Maven for credentials -->
-                    <path>/qaenv</path> <!-- Custom context path -->
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <!-- Extra configuration for custom Context Path -->
-    <profiles>
-        <profile>
-            <id>tomcat10-deploy</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <version>3.1.0</version>
-                        <executions>
-                            <execution>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${project.build.directory}/tomcat-context</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>src/main/resources</directory>
-                                            <includes>
-                                                <include>**/*.xml</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>
